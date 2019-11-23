@@ -1,0 +1,17 @@
+<link rel=stylesheet href=/static/style.css type=text/css>
+
+<h2><a href="{% url 'index'%}">{{company.company_name}}</a></h2>
+{% if company %}
+        <h3>Managers</h3>
+        <ul class="zebra">
+            {% for manager in company.manager_set.all %}
+                <li>{{ manager.manager_name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Works</h3>
+        <ul class="zebra">
+            {% for work in company.work_set.all %}
+                <li><a href="{% url 'work_details' company.id work.id %}">{{ work.work_name }}</a></li>
+            {% endfor%}
+        </ul>
+{% endif %}

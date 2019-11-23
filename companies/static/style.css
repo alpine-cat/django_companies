@@ -1,0 +1,51 @@
+.zebra {
+    list-style: none;
+    border-left: 10px solid rgb(129, 116, 252);
+    padding: 0;
+    font-family: "Lucida Sans";
+  }
+.zebra li {padding: 10px;}
+.zebra li:nth-child(odd) {background: #E1F1FF;}
+.zebra li:nth-child(even) {background: white;}
+.zebtable {
+    width: 450px;
+    margin:20px 45px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    border-collapse: collapse;
+    color: #080808;
+  } 
+.zebtable th {
+    color: rgb(245, 246, 247);
+    border-bottom: 3px solid #B9B29F;
+    padding: 15px;
+    text-align: left;
+    background-color: rgb(129, 116, 252);
+  }
+.zebtable td {padding: 15px;}
+.zebtable tr:nth-child(odd) {background:  #E1F1FF;}
+.zebtable tr:nth-child(even) { background: white;}
+h3 {
+    padding: 0 0 6px 10px;
+    border-left: 10px solid #A6D8CB;
+    border-bottom: 2px solid #A6D8CB;
+  }
+h2>a {
+    color:#254566; 
+    line-height: 1.2; 
+    position: relative;  
+  }
+h2, h3 {font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    color: #261d52;
+    margin: 15px;
+    padding: 10px 100px; 
+}
+h3{padding: 5px;}
+a{
+    color: rgb(48, 71, 175);
+    text-shadow: 1px 1px 1px #ffffff;
+  }
+a:hover {
+    position: relative;
+    top: 2px;
+    left: 2px;
+  }
