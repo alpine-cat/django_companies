@@ -20,14 +20,15 @@ class Work(models.Model):
     def __str__(self):
         return str(self.work_name)
 
-class WorkPlace(models.Model):
-    work = models.ForeignKey(Work, on_delete=models.CASCADE)
-    workplace_name = models.CharField(max_length=200)
-    def __str__(self):
-        return str(self.workplace_name)
-
 class Worker(models.Model):
-    workplace = models.OneToOneField(WorkPlace, on_delete=models.CASCADE)
     worker_name = models.CharField(max_length=100)
     def __str__(self):
         return str(self.worker_name)
+
+class WorkPlace(models.Model):
+    work = models.ForeignKey(Work, on_delete=models.CASCADE)
+    workplace_name = models.CharField(max_length=200)
+    worker = models.OneToOneField(Worker, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.workplace_name)
+
