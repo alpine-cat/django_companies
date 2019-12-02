@@ -1,9 +1,12 @@
-<link rel=stylesheet href=/static/style.css type=text/css>
-<h2>Companies:</h2>
-{% if companies_list %}
-<ul class= "zebra">
-    {% for company in companies_list %}
-    <li><a href="{% url 'details' company.id %}">{{ company.company_name }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% load static i18n %}
+{% extend 'base.html' %}
+{% block body%}
+    <h2>Companies:</h2>
+    {% if companies_list %}
+    <ul class= "zebra">
+        {% for company in companies_list %}
+        <li><a href="{% url 'details' company.id %}">{{ company.company_name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}

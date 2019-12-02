@@ -56,7 +56,7 @@ class WorkTime(models.Model):
         (STATUS_CANSELLED, 'Canselled'),
     ]
 
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE) #on delete can be PROTECTED
     work_place = models.ForeignKey(WorkPlace, on_delete=models.CASCADE)
     status = models.IntegerField(choices=STATUSES, default=STATUS_NEW)
     date_start = models.DateTimeField()
