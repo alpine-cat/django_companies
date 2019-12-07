@@ -32,3 +32,5 @@ class WorkPlace(models.Model):
     def __str__(self):
         return str(self.workplace_name)
 
+class WorkTime(models.Model):
+    
