@@ -1,5 +1,13 @@
 from django.db import models
 
+class Human(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        abstract = True
 
 class Company(models.Model):
     company_name = models.CharField(max_length=200)
@@ -7,12 +15,10 @@ class Company(models.Model):
     def __str__(self):
         return str(self.company_name)
 
-class Manager(models.Model):
+class Manager(Human):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    manager_name = models.CharField(max_length=100)
     
-    def __str__(self):
-        return str(self.manager_name)
+    
 
 class Work(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
@@ -20,10 +26,8 @@ class Work(models.Model):
     def __str__(self):
         return str(self.work_name)
 
-class Worker(models.Model):
-    worker_name = models.CharField(max_length=100)
-    def __str__(self):
-        return str(self.worker_name)
+class Worker(Human):
+    pass
 
 class WorkPlace(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE)
@@ -56,7 +60,7 @@ class WorkTime(models.Model):
         (STATUS_CANSELLED, 'Canselled'),
     ]
 
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE) #on delete can be PROTECTED
+    worker = models.ForeignKey(Worker, on_delete=models.PROTECT) 
     work_place = models.ForeignKey(WorkPlace, on_delete=models.CASCADE)
     status = models.IntegerField(choices=STATUSES, default=STATUS_NEW)
     date_start = models.DateTimeField()
