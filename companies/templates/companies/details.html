@@ -1,11 +1,15 @@
-<link rel=stylesheet href=/static/style.css type=text/css>
-
-<h2><a href="{% url 'index'%}">{{company.company_name}}</a></h2>
+{%extends 'companies/base.html'%}
+{% block body %}
+<h2><a href="{% url 'companies_list'%}">{{company.company_name}}</a></h2>
 {% if company %}
         <h3>Works</h3>
         <ul class="zebra">
             {% for work in company.work_set.all %}
-                <li><a href="{% url 'managers' company.id work.id %}">{{ work.work_name }}</a></li>
+            <li><a href="{% url 'set_worker' company.id work.id %}">{{ work.work_name }}</a></li>
             {% endfor%}
         </ul>
+<a href="{% url 'create_work' company.id %}"><button>Add</button></a>
+<a href="{% url 'manager_list' company.id %}"><button>Managers</button></a>
 {% endif %}
+
+{% endblock %}

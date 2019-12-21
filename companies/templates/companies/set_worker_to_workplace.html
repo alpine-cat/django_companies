@@ -1,5 +1,10 @@
+{%extends 'companies/base.html'%}
+{% block body %}
 <form  action="" method="POST">
-    {%csrf_token%}
-    {{form}}
+    <ul class="list5b">
+        {%csrf_token%}
+        {{form.as_ul}}
+    </ul>
     <input type="submit" value="Add"/>
 </form>
+{% endblock %}

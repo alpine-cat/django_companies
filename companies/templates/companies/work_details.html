@@ -1,3 +1,5 @@
+{%extends 'companies/base.html'%}
+{% block body %}
 <link rel=stylesheet href=/static/style.css type=text/css>
 <h2><a href="{% url 'details' company.id%}">{{company.company_name}}</a>: {{work.work_name}}</h2>
 {% if work %}
@@ -12,5 +14,6 @@
         <td>{{workplace.worker}}</td>
     </tr>
     {%endfor%}
-</ul>
+</table>
 {% endif %}
+{% endblock %}

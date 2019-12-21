@@ -1,0 +1,11 @@
+{%extends 'companies/base.html'%}
+{% block body %}
+    <h2>Companies:</h2>
+    {% if managers %}
+    <ul class= "zebra">
+        {% for manager in managers %}
+        <li>{{ manager }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{%endblock%}

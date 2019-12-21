@@ -7,6 +7,7 @@ class AddWorkTimeForm(forms.ModelForm):
         model = WorkTime
         fields = ['worker', 'work_place', 'date_start', 'date_end']
 
+
 class AddWorkForm(forms.ModelForm):
     class Meta:
         model = Work

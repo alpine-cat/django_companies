@@ -1,4 +1,5 @@
-
+{%extends 'companies/base.html'%}
+{% block body %}
     <h2>Companies:</h2>
     {% if companies_list %}
     <ul class= "zebra">
@@ -7,3 +8,5 @@
         {% endfor %}
     </ul>
     {% endif %}
+
+{%endblock%}

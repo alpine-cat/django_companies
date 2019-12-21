@@ -7,23 +7,43 @@
 .zebra li {padding: 10px;}
 .zebra li:nth-child(odd) {background: #E1F1FF;}
 .zebra li:nth-child(even) {background: white;}
-.zebtable {
-    width: 450px;
-    margin:20px 45px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    border-collapse: collapse;
-    color: #080808;
-  } 
-.zebtable th {
-    color: rgb(245, 246, 247);
-    border-bottom: 3px solid #B9B29F;
-    padding: 15px;
-    text-align: left;
-    background-color: rgb(129, 116, 252);
-  }
-.zebtable td {padding: 15px;}
-.zebtable tr:nth-child(odd) {background:  #E1F1FF;}
-.zebtable tr:nth-child(even) { background: white;}
+
+
+.list5b {
+    padding:0;
+    list-style: none;
+}
+.list5b li {
+    width: 80%;
+    position: relative;
+    padding: 10px 30px;
+    background: linear-gradient(to left, #E0FFFF 0%, #FFF, #E0FFFF);
+    border: 2px solid #C0C0C0;
+    color: #501a6b;
+    box-shadow: 0 5px 5px 0 rgba(0,0,0, .2);
+    margin-bottom: 5px;
+    text-align:left;
+    background-size: 100% 100%;
+    z-index: 3;
+}
+
+form{
+    width: 300px;
+    margin: 0 auto;
+}
+
+form ul{
+    padding: 0;
+}
+
+form li{
+    margin-bottom: 5px;
+}
+
+form li input, select{
+    margin:0 auto;
+}
+
 h3 {
     padding: 0 0 6px 10px;
     border-left: 10px solid #A6D8CB;
@@ -49,3 +69,23 @@ a:hover {
     top: 2px;
     left: 2px;
   }
+
+menu{
+    margin: 0;
+    padding: 0;
+    height: 50px;
+}
+
+menu li {
+    float: left;
+}
+
+menu li a {
+    display: block;
+    color:black;
+    height: 50px;
+    padding: 0 30px;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 50px;
+}

@@ -1,0 +1,14 @@
+{%extends 'companies/base.html'%}
+{% block body %}
+<link rel=stylesheet href=/static/style.css type=text/css>
+<h2><a href="{% url 'worker_list'%}">{{worker.name}}</a></h2>
+{% if worker %}
+        <h3>Worktimes</h3>
+        <ul class="zebra">
+            {% for worktime in worker.worktime_set.all %}
+                <li>{{ worktime }}</li>
+            {% endfor%}
+        </ul>
+<a href="{% url 'create_worktime' worker.id %}"><button>Add</button></a>
+{% endif %}
+{% endblock %}

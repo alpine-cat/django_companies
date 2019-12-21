@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.http import Http404
 from .models import Company, Work, Manager, Worker, WorkTime
 from .forms import AddWorkForm, AddWorkTimeForm, SetWorkPlaceForm
 from django.views import generic
@@ -17,7 +15,7 @@ class CompanyView(generic.ListView):
 
 class ManagerView(generic.ListView):
     model = Manager
-    template_name = 'polls/managers.html'
+    template_name = 'companies/managers.html'
     context_object_name = 'managers'
 
     def get_queryset(self):
@@ -27,22 +25,19 @@ class ManagerView(generic.ListView):
 
 class CompanyDetailView(generic.DetailView):
     model = Company
-    template_name= 'companies/details.html'
+    template_name = 'companies/details.html'
+
 
 class WorkerView(generic.ListView):
     model = Worker
-    template_name = ''
+    template_name = 'companies/workers.html'
     context_object_name = 'workers'
+
 
 class WorkerDetailsView(generic.DetailView):
     model = Worker
-    template_name = ''
+    template_name = 'companies/worker_details.html'
 
-    def get_queryset(self):
-        context = super().get_context_data(**kwargs)
-        worker = get_object_or_404(Worker, pk=self.kwargs.get('pk'))
-        context['worktimes'] = WorkTime.objects.filter(worker=worker)
-        return context
 
 
 class WorkCreateView(generic.CreateView):
@@ -51,7 +46,7 @@ class WorkCreateView(generic.CreateView):
 
     def get_success_url(self):
         company_id = self.kwargs.get('pk')
-        return reverse('company_detail', kwargs={'pk': company_id})
+        return reverse('details', kwargs={'pk': company_id})
 
     def get_initial(self):
         company = get_object_or_404(Company, id=self.kwargs.get('pk'))
@@ -81,4 +76,4 @@ class SetWorkPlace(generic.CreateView):
 
     def get_success_url(self):
         company_id = self.kwargs.get('company_id')
-        return reverse('company_details', kwargs={'pk': company_id})
+        return reverse('details', kwargs={'pk': company_id})

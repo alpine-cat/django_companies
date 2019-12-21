@@ -1,0 +1,11 @@
+{%extends 'companies/base.html'%}
+{% block body %}
+<h2>Workers</h2>
+<ul class="zebra">
+{%for worker in workers%}
+    <li class="zebra">
+        <a class='text' href="{%url 'worker_details' worker.id%}">{{worker.name}}</a>
+    </li>
+{%endfor%}
+</ul>
+{%endblock%}
