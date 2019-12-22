@@ -4,6 +4,10 @@ from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
+import logging
+
+logger = logging.getLogger('sentry_log')
+
 
 class CompanyView(generic.ListView):
     template_name = 'companies/index.html'
@@ -39,7 +43,6 @@ class WorkerDetailsView(generic.DetailView):
     template_name = 'companies/worker_details.html'
 
 
-
 class WorkCreateView(generic.CreateView):
     template_name = 'companies/create_work.html'
     form_class = AddWorkForm
@@ -51,6 +54,16 @@ class WorkCreateView(generic.CreateView):
     def get_initial(self):
         company = get_object_or_404(Company, id=self.kwargs.get('pk'))
         return {'company': company}
+
+    def form_valid(self, form):
+        form.save()
+        data = self.request.POST
+        logger.debug(
+            'company: %s, work name: %s',
+            data['company'], data['work_name']
+        )
+        logger.info('work created')
+        return super().form_valid(form)
 
 
 class WorkTimeCreateView(generic.CreateView):
@@ -65,6 +78,15 @@ class WorkTimeCreateView(generic.CreateView):
         worker = get_object_or_404(Worker, id=self.kwargs.get('pk'))
         return {'worker': worker}
 
+    def form_valid(self, form):
+        form.save()
+        data = self.request.POST
+        logger.debug('start: %s, end: %s, worker: %s, workplace:%s, status:%s',
+                     data['date_start'], data['date_end'], data['worker'],
+                     data['work_place'], data['status'])
+        logger.info('work time created')
+        return super().form_valid(form)
+
 
 class SetWorkPlace(generic.CreateView):
     form_class = SetWorkPlaceForm
@@ -77,3 +99,11 @@ class SetWorkPlace(generic.CreateView):
     def get_success_url(self):
         company_id = self.kwargs.get('company_id')
         return reverse('details', kwargs={'pk': company_id})
+
+    def form_valid(self, form):
+        form.save()
+        data = self.request.POST
+        logger.debug('worker: %s, work:%s',
+                     data['worker'], data['work'])
+        logger.info('set worker to workplace')
+        return super().form_valid(form)
