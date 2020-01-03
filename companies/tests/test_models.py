@@ -1,9 +1,9 @@
-from django.test import TestCase
+from django.test import TransactionTestCase
 
 from companies.models import Company, Manager, WorkPlace, Work, Worker
 
 
-class TestManagerModel(TestCase):
+class TestManagerModel(TransactionTestCase):
     def setUp(self):
         self.company = Company.objects.create(company_name="Name")
         self.manager = Manager.objects.create(
@@ -16,13 +16,13 @@ class TestManagerModel(TestCase):
         self.assertEqual(self.manager.name, 'Manager1')
 
 
-class TestCompanyModel(TestCase):
+class TestCompanyModel(TransactionTestCase):
     def test_company(self):
         company = Company(company_name='Name')
         self.assertIsNotNone(company)
 
 
-class TestWorkPlaceModel(TestCase):
+class TestWorkPlaceModel(TransactionTestCase):
     def setUp(self):
         company = Company(company_name='Name')
         worker = Worker(name='Worker')
