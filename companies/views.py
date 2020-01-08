@@ -3,13 +3,14 @@ from .forms import AddWorkForm, AddWorkTimeForm, SetWorkPlaceForm
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 import logging
 
 logger = logging.getLogger('sentry_log')
 
 
-class CompanyView(generic.ListView):
+class CompanyView(LoginRequiredMixin, generic.ListView):
     template_name = 'companies/index.html'
     context_object_name = 'companies_list'
 
@@ -27,7 +28,10 @@ class ManagerView(generic.ListView):
         return Manager.objects.filter(company=company)
 
 
-class CompanyDetailView(generic.DetailView):
+class CompanyDetailView(PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'companies.can_view_company_detail'
+    raise_exception = True
+
     model = Company
     template_name = 'companies/details.html'
 

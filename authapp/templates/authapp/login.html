@@ -1,0 +1,12 @@
+{%extends 'companies/base.html'%}
+{%block body%}
+{%if form%}
+<form  action="" method="POST">
+    <ul class="list5b">
+        {%csrf_token%}
+        {{form.as_ul}}
+    </ul>
+    <input type="submit" value="Login"/>
+</form>
+{%endif%}
+{%endblock%}

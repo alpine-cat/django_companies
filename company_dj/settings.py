@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'companies.apps.CompaniesConfig'
+    'companies.apps.CompaniesConfig',
+    'authapp.apps.AuthappConfig'
 ]
 
 MIDDLEWARE = [
@@ -67,6 +68,10 @@ TEMPLATES = [
         },
     },
 ]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'companies_list'
+LOGOUT_REDIRECT_URL = 'companies_list'
 
 WSGI_APPLICATION = 'company_dj.wsgi.application'
 
