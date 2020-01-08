@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Human(models.Model):
@@ -44,10 +45,10 @@ class WorkPlace(models.Model):
     STATUS_CANCELLED = 2
     STATUS_FINISHED = 3
     STATUSES = [
-        (STATUS_NEW, 'New'), 
-        (STATUS_APPROVED, 'Approved'),
-        (STATUS_CANCELLED, 'Cancelled'),
-        (STATUS_FINISHED, 'Finished'),
+        (STATUS_NEW, _('New')),
+        (STATUS_APPROVED, _('Approved')),
+        (STATUS_CANCELLED, _('Cancelled')),
+        (STATUS_FINISHED, _('Finished')),
     ]
 
     status = models.IntegerField(choices=STATUSES, default=STATUS_NEW)
@@ -61,9 +62,9 @@ class WorkTime(models.Model):
     STATUS_APPROVED = 1
     STATUS_CANCELLED = 2
     STATUSES = [
-        (STATUS_NEW, 'New'), 
-        (STATUS_APPROVED, 'Approved'),
-        (STATUS_CANCELLED, 'Cancelled'),
+        (STATUS_NEW, _('New')),
+        (STATUS_APPROVED, _('Approved')),
+        (STATUS_CANCELLED, _('Cancelled')),
     ]
 
     worker = models.ForeignKey(Worker, on_delete=models.PROTECT) 
@@ -73,4 +74,4 @@ class WorkTime(models.Model):
     date_end = models.DateTimeField()
 
     def __str__(self):
-        return str(self.work_place + ' start:' + self.date_start+ ' end:' + self.date_end)
+        return str(self.work_place + _(' start:') + self.date_start + _(' end:') + self.date_end)

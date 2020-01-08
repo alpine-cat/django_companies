@@ -1,6 +1,8 @@
+
 {%extends 'companies/base.html'%}
+{% load i18n%}
 {% block body %}
-    <h2>Managers:</h2>
+    <h2>{%trans "Managers:"%}</h2>
     {% if managers %}
     <ul class= "zebra">
         {% for manager in managers %}

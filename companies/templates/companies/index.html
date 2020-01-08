@@ -1,6 +1,8 @@
+
 {%extends 'companies/base.html'%}
+{% load i18n%}
 {% block body %}
-    <h2>Companies:</h2>
+    <h2>{%trans "Companies:"%}</h2>
     {% if companies_list %}
     <ul class= "zebra">
         {% for company in companies_list %}

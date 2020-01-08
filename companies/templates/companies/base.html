@@ -1,3 +1,4 @@
+{% load i18n%}
 {% load static %}
 <link rel=stylesheet href=/static/style.css type=text/css>
 
@@ -6,8 +7,8 @@
     <body>
     <div>
         <menu>
-            <li><a href = "{% url 'companies_list' %}">Companies</a></li>
-            <li><a href="{% url 'worker_list' %}">Workers</a></li>
+            <li><a href = "{% url 'companies_list' %}">{%trans "Companies"%}</a></li>
+            <li><a href="{% url 'worker_list' %}">{%trans "Workers"%}</a></li>
         </menu>
     </div>
         {% block body %}

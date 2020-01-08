@@ -1,6 +1,8 @@
 {%extends 'companies/base.html'%}
+{% load i18n%}
+
 {% block body %}
-<h2>Workers</h2>
+<h2>{%trans "Workers"%}</h2>
 <ul class="zebra">
 {%for worker in workers%}
     <li class="zebra">
