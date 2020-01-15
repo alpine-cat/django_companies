@@ -25,6 +25,15 @@ class CompanyView(viewsets.ModelViewSet):
         return CompanySerializer
 
     @action(methods=['post'], detail=True)
+    def create_work(self, request, pk=None):
+        company = self.get_object()
+        serializer = WorkSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save(company=company)
+            return Response(serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post'], detail=True)
     def create_manager(self, request, pk=None):
         company = self.get_object()
         serializer = ManagerSerializer(data=request.data, context={'request': request})
@@ -33,15 +42,6 @@ class CompanyView(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    @action(methods=['post'], detail=True)
-    def create_work(self, request, pk=None):
-        company = self.get_object()
-        serializer = WorkSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save(company=company)
-            return Response(serializer.data)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ManagerView(viewsets.ModelViewSet):
@@ -81,10 +81,10 @@ class SetWorkPlace(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=True)
     def create_worktime(self, request, pk=None):
-        wp = self.get_object()
+        workplace = self.get_object()
         serializer = WorkTimeSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(workplace=wp, work=wp.work_name,
-                            worker=wp.worker_name)
+            serializer.save(workplace=workplace, work=workplace.work_name,
+                            worker=workplace.worker_name)
             return Response(serializer.data)
         return Response(status=status.HTTP_400_BAD_REQUEST)
