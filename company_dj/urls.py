@@ -15,16 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from companies.urls import router
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_swagger.views import get_swagger_view
 
-from django.conf.urls.i18n import i18n_patterns
+schema_view = get_swagger_view(title='My API')
 
 urlpatterns = [
-    path('', include('authapp.urls')),
-
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('silk/', include('silk.urls', namespace='silk'))
-]
+    path('', obtain_auth_token),
+    path('swagger/', schema_view)
 
-urlpatterns += i18n_patterns(
-    path('', include('companies.urls')),
-)
+]

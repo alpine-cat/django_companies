@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 
 class Human(models.Model):
@@ -20,11 +19,11 @@ class Company(models.Model):
 
 
 class Manager(Human):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='managers')
 
 
 class Work(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='works')
     work_name = models.CharField(max_length=200)
 
     def __str__(self):
@@ -36,19 +35,19 @@ class Worker(Human):
 
 
 class WorkPlace(models.Model):
-    work = models.ForeignKey(Work, on_delete=models.CASCADE)
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='worker')
     workplace_name = models.CharField(max_length=200)
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE, related_name='work')
 
     STATUS_NEW = 0
     STATUS_APPROVED = 1
     STATUS_CANCELLED = 2
     STATUS_FINISHED = 3
     STATUSES = [
-        (STATUS_NEW, _('New')),
-        (STATUS_APPROVED, _('Approved')),
-        (STATUS_CANCELLED, _('Cancelled')),
-        (STATUS_FINISHED, _('Finished')),
+        (STATUS_NEW, 'New'),
+        (STATUS_APPROVED, 'Approved'),
+        (STATUS_CANCELLED, 'Cancelled'),
+        (STATUS_FINISHED, 'Finished'),
     ]
 
     status = models.IntegerField(choices=STATUSES, default=STATUS_NEW)
@@ -62,9 +61,9 @@ class WorkTime(models.Model):
     STATUS_APPROVED = 1
     STATUS_CANCELLED = 2
     STATUSES = [
-        (STATUS_NEW, _('New')),
-        (STATUS_APPROVED, _('Approved')),
-        (STATUS_CANCELLED, _('Cancelled')),
+        (STATUS_NEW, 'New'),
+        (STATUS_APPROVED, 'Approved'),
+        (STATUS_CANCELLED, 'Cancelled'),
     ]
 
     worker = models.ForeignKey(Worker, on_delete=models.PROTECT) 
@@ -74,4 +73,4 @@ class WorkTime(models.Model):
     date_end = models.DateTimeField()
 
     def __str__(self):
-        return str(self.work_place + _(' start:') + self.date_start + _(' end:') + self.date_end)
+        return str(self.work_place + ' start:' + self.date_start + ' end:' + self.date_end)

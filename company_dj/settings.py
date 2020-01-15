@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'companies.apps.CompaniesConfig',
-    'authapp.apps.AuthappConfig',
-    'silk',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'company_dj.urls'
@@ -72,9 +72,6 @@ TEMPLATES = [
     },
 ]
 
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'companies_list'
-LOGOUT_REDIRECT_URL = 'companies_list'
 
 WSGI_APPLICATION = 'company_dj.wsgi.application'
 
@@ -122,11 +119,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-LANGUAGES = [
-  ('ru', 'Russian'),
-  ('en', 'English'),
-]
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -134,7 +126,6 @@ LANGUAGES = [
 STATIC_URL = '/static/'
 
 import logging
-from django.utils.log import DEFAULT_LOGGING
 
 
 LOGGING = {
@@ -155,8 +146,19 @@ LOGGING = {
        },
    },
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
 import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
 
@@ -169,3 +171,5 @@ sentry_sdk.init(
     dsn="https://62ca08b9c62b4c2eb05999787d543802@sentry.io/1864033",
     integrations=[sentry_logging],
 )
+
+

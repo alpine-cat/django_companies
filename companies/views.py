@@ -1,113 +1,90 @@
-from .models import Company, Work, Manager, Worker, WorkTime
-from .forms import AddWorkForm, AddWorkTimeForm, SetWorkPlaceForm
-from django.views import generic
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from .models import Company, Work, Manager, Worker, WorkTime, WorkPlace
 
-import logging
+from rest_framework import permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import viewsets
 
-logger = logging.getLogger('sentry_log')
-
-
-class CompanyView(LoginRequiredMixin, generic.ListView):
-    template_name = 'companies/index.html'
-    context_object_name = 'companies_list'
-
-    def get_queryset(self):
-        return Company.objects.all()
+from .serializers import (
+    ManagerSerializer, WorkerSerializer,WorkPlaceSerializer, WorkPlaceDetailSerializer,
+    CompanySerializer, WorkSerializer, CompanyDetailSerializer, WorkTimeSerializer
+)
 
 
-class ManagerView(generic.ListView):
-    model = Manager
-    template_name = 'companies/managers.html'
-    context_object_name = 'managers'
+class CompanyView(viewsets.ModelViewSet):
+    queryset = Company.objects.all()
 
-    def get_queryset(self):
-        company = get_object_or_404(Company, id=self.kwargs.get('pk'))
-        return Manager.objects.filter(company=company)
+    def get_serializer_class(self):
+        if self.action == 'create_manager':
+            return ManagerSerializer
+        elif self.action == 'create_work':
+            return WorkSerializer
+        elif self.action == 'retrieve':
+            return CompanyDetailSerializer
+        return CompanySerializer
 
+    @action(methods=['post'], detail=True)
+    def create_manager(self, request, pk=None):
+        company = self.get_object()
+        serializer = ManagerSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save(company_name=company)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class CompanyDetailView(PermissionRequiredMixin, generic.DetailView):
-    permission_required = 'companies.can_view_company_detail'
-    raise_exception = True
-
-    model = Company
-    template_name = 'companies/details.html'
-
-
-class WorkerView(generic.ListView):
-    model = Worker
-    template_name = 'companies/workers.html'
-    context_object_name = 'workers'
-
-
-class WorkerDetailsView(generic.DetailView):
-    model = Worker
-    template_name = 'companies/worker_details.html'
-
-
-class WorkCreateView(generic.CreateView):
-    template_name = 'companies/create_work.html'
-    form_class = AddWorkForm
-
-    def get_success_url(self):
-        company_id = self.kwargs.get('pk')
-        return reverse('details', kwargs={'pk': company_id})
-
-    def get_initial(self):
-        company = get_object_or_404(Company, id=self.kwargs.get('pk'))
-        return {'company': company}
-
-    def form_valid(self, form):
-        form.save()
-        data = self.request.POST
-        logger.debug(
-            'company: %s, work name: %s',
-            data['company'], data['work_name']
-        )
-        logger.info('work created')
-        return super().form_valid(form)
+    @action(methods=['post'], detail=True)
+    def create_work(self, request, pk=None):
+        company = self.get_object()
+        serializer = WorkSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save(company=company)
+            return Response(serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class WorkTimeCreateView(generic.CreateView):
-    form_class = AddWorkTimeForm
-    template_name = 'companies/create_worktime.html'
-
-    def get_success_url(self):
-        worker_id = self.kwargs.get('pk')
-        return reverse('worker_detail', kwargs={'pk': worker_id})
-
-    def get_initial(self):
-        worker = get_object_or_404(Worker, id=self.kwargs.get('pk'))
-        return {'worker': worker}
-
-    def form_valid(self, form):
-        form.save()
-        data = self.request.POST
-        logger.debug('start: %s, end: %s, worker: %s, workplace:%s, status:%s',
-                     data['date_start'], data['date_end'], data['worker'],
-                     data['work_place'], data['status'])
-        logger.info('work time created')
-        return super().form_valid(form)
+class ManagerView(viewsets.ModelViewSet):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+    permission_class = (permissions.IsAuthenticatedOrReadOnly,)
 
 
-class SetWorkPlace(generic.CreateView):
-    form_class = SetWorkPlaceForm
-    template_name = 'companies/set_worker_to_workplace.html'
+class WorkerView(viewsets.ModelViewSet):
+    queryset = Worker.objects.all()
+    serializer_class = WorkerSerializer
+    permission_class = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def get_initial(self):
-        work_name = get_object_or_404(Work, id=self.kwargs.get('work_id'))
-        return {'work_name': work_name}
 
-    def get_success_url(self):
-        company_id = self.kwargs.get('company_id')
-        return reverse('details', kwargs={'pk': company_id})
+class WorkTimeView(viewsets.ModelViewSet):
+    queryset = WorkTime.objects.all()
+    serializer_class = WorkTimeSerializer
+    permission_class = (permissions.IsAuthenticated,)
 
-    def form_valid(self, form):
-        form.save()
-        data = self.request.POST
-        logger.debug('worker: %s, work:%s',
-                     data['worker'], data['work'])
-        logger.info('set worker to workplace')
-        return super().form_valid(form)
+
+class WorkView(viewsets.ModelViewSet):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer
+    permission_class = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class SetWorkPlace(viewsets.ModelViewSet):
+    queryset = WorkPlace.objects.all()
+    permissions_classes = (permissions.IsAuthenticated,)
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return WorkPlaceDetailSerializer
+        if self.action == 'create_worktime':
+            return WorkTimeSerializer
+        return WorkPlaceSerializer
+
+    @action(methods=['post'], detail=True)
+    def create_worktime(self, request, pk=None):
+        wp = self.get_object()
+        serializer = WorkTimeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(workplace=wp, work=wp.work_name,
+                            worker=wp.worker_name)
+            return Response(serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
