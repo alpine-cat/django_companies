@@ -22,7 +22,6 @@ urlpatterns = [
     path('', include('authapp.urls')),
 
     path('admin/', admin.site.urls),
-    path('silk/', include('silk.urls', namespace='silk'))
 ]
 
 urlpatterns += i18n_patterns(

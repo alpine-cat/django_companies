@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
+from celery.schedules import crontab
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'companies.apps.CompaniesConfig',
     'authapp.apps.AuthappConfig',
-    'silk',
+
+
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'silk.middleware.SilkyMiddleware',
+
 ]
 
 ROOT_URLCONF = 'company_dj.urls'
@@ -133,39 +134,22 @@ LANGUAGES = [
 
 STATIC_URL = '/static/'
 
-import logging
-from django.utils.log import DEFAULT_LOGGING
 
 
-LOGGING = {
-   'version': 1,
-   'disable_existing_loggers': False,
-   'handlers': {
-
-       'sentry': {
-           'level': 'DEBUG',
-           'class': 'sentry_sdk.integrations.logging.BreadcrumbHandler',
-       }
-   },
-   'loggers': {
-       'sentry_log': {
-           'handlers': ['sentry'],
-           'level': 'DEBUG',
-           'propagate': False,
-       },
-   },
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Kiev'
+CELERY_ROUTES = {
+    'polls.tasks.statistic': {'queue': 'statistic'},
+    'polls.tasks.create_worker': {'queue': 'create_worker'},
+    'polls.tasks.send_mail_overtime': {'queue': 'send_mail'}
 }
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
-
-
-sentry_logging = LoggingIntegration(
-   level=logging.DEBUG,        # Capture info and above as breadcrumbs
-   event_level=logging.INFO    # Send INFO as events
-)
-
-sentry_sdk.init(
-    dsn="https://62ca08b9c62b4c2eb05999787d543802@sentry.io/1864033",
-    integrations=[sentry_logging],
-)
+CELERY_BEAT_SCHEDULE = {
+    'statistic': {
+        'task': 'polls.tasks.statistic',
+        'schedule': crontab(day_of_week=1)
+        }
+}
